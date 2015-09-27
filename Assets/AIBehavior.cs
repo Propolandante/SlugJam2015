@@ -58,17 +58,8 @@ public class AIBehavior : MonoBehaviour {
         public void update()
         {
             float time = Time.time;
-            int i = 0;
             while (time - start_time >= 0.001*animation[frame + 1].time)
             {
-                // For debugging only
-                {
-                    break;
-                    ++i;
-                    if (i >= 10)
-                        break;
-                }
-
                 ++frame;
 
                 switch (animation[frame].type)
