@@ -10,6 +10,10 @@ public class HandwritingPainter : MonoBehaviour
 	public RenderTexture canvasTexture;
 	public Material baseMaterial;
 	public Color spriteColor;
+	public GameObject canvas;
+
+	public Texture2D bakedTex;
+	public Texture exampleTex;
 
 	public GameObject pencil;
 	public MouseListener pencilListener;
@@ -75,12 +79,13 @@ public class HandwritingPainter : MonoBehaviour
 		Debug.Log("SaveTexture()");
 		saving = true;
 		spriteCounter = 0;
+		System.DateTime date = System.DateTime.Now; // pretty sure this is unnecessary
 		RenderTexture.active = canvasTexture;
-		Texture2D tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
-		tex.ReadPixels(new Rect(0,0,tex.width, tex.height), 0, 0);
-		//tex.Apply();
+		bakedTex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
+		bakedTex.ReadPixels(new Rect(0,0,canvasTexture.width, canvasTexture.height), 0, 0);
+		bakedTex.Apply();
 		RenderTexture.active = null;
-		baseMaterial.mainTexture = tex;
+		canvas.GetComponent<MeshRenderer>().material.SetTexture("_MainTex",bakedTex);
 		foreach (Transform child in spriteContainer.transform)
 		{
 			Destroy(child.gameObject);
