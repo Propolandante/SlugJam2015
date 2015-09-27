@@ -18,6 +18,7 @@ public class HandwritingPainter : MonoBehaviour
 
 	public GameObject pencil;
 	public MouseListener pencilListener;
+	public AIBehavior ai_behavior;
 
 	public int spriteCounter = 0;
 	int maxSpriteCount = 1000;
@@ -66,6 +67,12 @@ public class HandwritingPainter : MonoBehaviour
 
 	private void drawSprite(Vector2 pos)
 	{
+		// Tell the AI not to write here anymore
+		if(pencilListener.over_margin(pos)) {
+			int i = (int) Mathf.Floor((1-pos.y)*AIBehavior.RESOLUTION);
+			ai_behavior.available_space[i] = true;
+		}
+
 		GameObject spriteObj;
 		spriteObj = (GameObject)Instantiate(Resources.Load("Sprites/PencilSpriteObject"));
 		spriteObj.GetComponent<SpriteRenderer>().color = spriteColor;

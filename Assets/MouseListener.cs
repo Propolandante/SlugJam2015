@@ -7,21 +7,24 @@ public class MouseListener : MonoBehaviour {
     public GameObject debug;
     public GameObject painter;
     HandwritingPainter painterScript;
+	public AIBehavior ai_behavior;
 
     public float mx;
     public float my;
     float prevMx;
     float prevMy;
 
-    bool mouseDown = false;
+    public bool mouseDown = false;
     bool wasMouseDown = false;
 
 	// Use this for initialization
 	void Start () {
         painterScript = painter.GetComponent<HandwritingPainter>();
+
+		Cursor.visible = false;
 	}
 
-	void Update () 
+	void Update ()
     {
         mouseDown = Input.GetMouseButton(0);
         if (Input.GetMouseButtonDown(1))
@@ -49,16 +52,26 @@ public class MouseListener : MonoBehaviour {
 
     void checkMargin()
     {
-        if (mx < 0.3)
+        if (over_margin())
             debug.transform.position = new Vector3(1.65f, 3, -8.35f);
         else
             debug.transform.position = new Vector3(1.65f, 1.5f, -8.35f);
     }
 
+	public bool over_margin() {
+		return over_margin(new Vector2(mx, my));
+	}
+	public bool over_margin(Vector2 v) {
+		return v.x < 0.3;
+	}
+
     void handleClick()
     {
         if (mouseDown)
         {
+			if(over_margin())
+				ai_behavior.acknowledged = true;
+
             if (wasMouseDown)
             {
                 if (getScreenCoords() != getPrevScreenCoords())
