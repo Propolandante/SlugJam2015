@@ -30,11 +30,13 @@ public class AIBehavior : MonoBehaviour {
         }
     }
 
+	Vector2 hand_position = new Vector2(-3, 0);
     void moveHand(Vector2 v)
     {
         float x = (v.x-.5f) * paper.transform.localScale.x * -1f;
         float y = (v.y-.5f) * paper.transform.localScale.z * -1f;
         transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 0, y);
+		hand_position = v;
     }
     AIState state;
 
@@ -44,6 +46,30 @@ public class AIBehavior : MonoBehaviour {
         public void update() { }
         private Idling() { }
     }
+	class MovingLinearly : AIState {
+		Vector2 dest;
+		AIBehavior parent;
+		float speed;
+		AIState next;
+		public MovingLinearly(Vector2 d, float s, AIBehavior p, AIState n) {
+			dest = d;
+			parent = p;
+			speed = s;
+			next = n;
+		}
+		public void update() {
+			float dt = Time.deltaTime;
+
+			Vector2 total_displace = dest - parent.hand_position;
+			Vector2 partial_displace = total_displace.normalized * speed * dt;
+			if(total_displace.sqrMagnitude <= partial_displace.sqrMagnitude) {
+				parent.moveHand(dest);
+				parent.state = next;
+			} else {
+				parent.moveHand(parent.hand_position + partial_displace);
+			}
+		}
+	}
     class Animating : AIState
     {
         int frame;
@@ -56,16 +82,6 @@ public class AIBehavior : MonoBehaviour {
             start_time = Time.time;
             animation = a;
             parent = p;
-        }
-
-        private Vector2 pen_transform(Vector2 v)
-        {
-            return new Vector2(v.x / 640f, 1 - v.y / 640f);
-        }
-
-        private Vector2 pen_transform_2(Vector2 v)
-        {
-            return 700f * pen_transform(v);
         }
 
         public void update()
@@ -88,7 +104,7 @@ public class AIBehavior : MonoBehaviour {
 
                 if (frame == animation.Length - 1)
                 {
-                    parent.state = Idling.instance;
+                    parent.state = new MovingLinearly(new Vector2(-3, 0), 3f, parent, Idling.instance);
                     break;
                 }
             }
@@ -96,13 +112,20 @@ public class AIBehavior : MonoBehaviour {
             parent.moveHand(pen_transform(animation[frame].pos));
         }
     }
+	private static Vector2 pen_transform(Vector2 v)
+	{
+		return new Vector2(v.x / 640f, 1 - v.y / 640f);
+	}
+
     interface AIState
     {
         void update();
     }
-    void startAnimation(Motion[] animation)
+    public void startAnimation(Motion[] animation)
     {
-        state = new Animating(animation, this);
+        state =
+			new MovingLinearly(pen_transform(animation[0].pos), 3f, this,
+			new Animating(animation, this) );
     }
 
     void Update()
