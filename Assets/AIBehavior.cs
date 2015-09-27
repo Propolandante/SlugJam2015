@@ -8,7 +8,7 @@ public class AIBehavior : MonoBehaviour {
 
     void Start()
     {
-        startAnimation(Animations.anim_1);
+        startAnimation(Animations.anims[1]);
     }
 
     public class Motion
