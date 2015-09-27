@@ -28,6 +28,8 @@ class PaperController : MonoBehaviour
 
 	public void nextPage()
 	{
+
+		if(cycling) {return;}
 		
 		timeStartedCycling = Time.time;
 
