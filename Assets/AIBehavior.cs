@@ -107,6 +107,10 @@ public class AIBehavior : MonoBehaviour {
 
         public void update()
         {
+			// Check if the animation was over before it began
+			if(frame == animation.Length - 1)
+				end();
+
             float time = Time.time;
             while (time - start_time >= 1f/2.5f/1000f*animation[frame + 1].time)
             {
