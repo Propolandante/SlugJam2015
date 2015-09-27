@@ -61,9 +61,10 @@ public class AIBehavior : MonoBehaviour {
             int i = 0;
             while (time - start_time < 0.001*animation[frame + 1].time)
             {
+                Debug.Log(time.ToString() + " " + start_time.ToString() + " " + animation[frame + 1].time.ToString());
                 // For debugging only
                 {
-                    break;
+                    //break;
                     ++i;
                     if (i >= 10)
                         break;
