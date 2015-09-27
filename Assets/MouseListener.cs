@@ -16,6 +16,8 @@ public class MouseListener : MonoBehaviour {
 
     public bool mouseDown = false;
     bool wasMouseDown = false;
+	bool needToSave = false;
+	float lastMouseUp = 0.0f;  //Timestamp
 
 	// Use this for initialization
 	void Start () {
@@ -69,6 +71,8 @@ public class MouseListener : MonoBehaviour {
     {
         if (mouseDown)
         {
+			needToSave = true;
+
 			if(over_margin())
 				ai_behavior.acknowledged = true;
 
@@ -85,8 +89,13 @@ public class MouseListener : MonoBehaviour {
             }
         }
 
-        if (!mouseDown && wasMouseDown)
+		if(!mouseDown && wasMouseDown)
+			lastMouseUp = Time.time;
+
+        if(needToSave  &&  !mouseDown  &&  Time.time >= lastMouseUp + 1f)
         {
+			Debug.Log("Saving: " + Time.time);
+			needToSave = false;
             painterScript.SaveTexture();
         }
     }
