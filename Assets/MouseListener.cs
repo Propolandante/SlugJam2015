@@ -3,8 +3,8 @@ using System.Collections;
 
 public class MouseListener : MonoBehaviour {
 
-    GameObject paper = null;
-    GameObject debug = null;
+    public GameObject paper;
+    public GameObject debug;
     public GameObject painter;
     HandwritingPainter painterScript;
 
@@ -18,14 +18,16 @@ public class MouseListener : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        paper = GameObject.Find("Paper");
-        debug = GameObject.Find("Debug");
         painterScript = painter.GetComponent<HandwritingPainter>();
 	}
 
 	void Update () 
     {
         mouseDown = Input.GetMouseButton(0);
+        if (Input.GetMouseButtonDown(1))
+        {
+            GameObject.Find("Paper Stack").GetComponent<PaperController>().nextPage();
+        }
 
         updatePosition();
         checkMargin();
@@ -40,9 +42,9 @@ public class MouseListener : MonoBehaviour {
         prevMy = my;
         mx = (Input.mousePosition.x / Screen.width);
         my = (Input.mousePosition.y / Screen.height);
-        float x = (mx-.5f) * paper.transform.localScale.x * -1f;
-        float y = (my-.5f) * paper.transform.localScale.z * -1f;
-        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 0, y);
+        float x = (mx-.5f) * paper.transform.localScale.x;
+        float y = (my-.5f) * paper.transform.localScale.z ;
+        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, y, 0);
     }
 
     void checkMargin()
