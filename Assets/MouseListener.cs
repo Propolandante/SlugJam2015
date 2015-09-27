@@ -22,6 +22,8 @@ public class MouseListener : MonoBehaviour {
         paper = GameObject.Find("Paper");
         debug = GameObject.Find("Debug");
         painterScript = painter.GetComponent<HandwritingPainter>();
+
+		Cursor.visible = false;
 	}
 
 	void Update ()
