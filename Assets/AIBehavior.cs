@@ -41,9 +41,9 @@ public class AIBehavior : MonoBehaviour {
 	Vector2 hand_position = new Vector2(-3, 0);
     void moveHand(Vector2 v)
     {
-        float x = (v.x-.5f) * paper.transform.localScale.x * -1f;
-        float y = (v.y-.5f) * paper.transform.localScale.z * -1f;
-        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 0, y);
+        float x = (v.x-.5f) * paper.transform.localScale.x;
+        float y = (v.y-.5f) * paper.transform.localScale.z;
+        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, y, 0);
 		hand_position = v;
     }
     AIState state;
