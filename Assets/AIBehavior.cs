@@ -5,11 +5,17 @@ public class AIBehavior : MonoBehaviour {
 
     public HandwritingPainter painter;
 	public GameObject paper;
+	public MouseListener mouse_listener;
+
+	public static int RESOLUTION = 100;
+	public bool[] available_space;
 
     void Start()
     {
 		curr_msg = 1;
 		acknowledged = false;
+		available_space = new bool[RESOLUTION];
+
         startAnimation(Animations.anims[1]);
     }
 
@@ -48,7 +54,9 @@ public class AIBehavior : MonoBehaviour {
     {
 		AIBehavior parent;
         public void update() {
-			if(parent.acknowledged) {
+			if(      parent.acknowledged
+			      && !parent.mouse_listener.over_margin()
+				  && !parent.mouse_listener.mouseDown     ) {
 				if(parent.curr_msg < Animations.anims.Length) {
 					parent.acknowledged = false;
 					++parent.curr_msg;
@@ -92,17 +100,19 @@ public class AIBehavior : MonoBehaviour {
         float start_time;
         Motion[] animation;
         AIBehavior parent;
+		Vector2 offset;
 
 		private void end() {
 			parent.state = new MovingLinearly(new Vector2(-3, 0), 3f, parent, new Idling(parent));
 		}
 
-        public Animating(Motion[] a, AIBehavior p)
+        public Animating(Motion[] a, Vector2 off, AIBehavior p)
         {
             frame = 0;
             start_time = Time.time;
             animation = a;
             parent = p;
+			offset = off;
         }
 
         public void update()
@@ -120,10 +130,10 @@ public class AIBehavior : MonoBehaviour {
                 switch (animation[frame].type)
                 {
                     case Motion.Type.DOT:
-                        parent.painter.writeDot(pen_transform(animation[frame].pos));
+                        parent.painter.writeDot(offset+pen_transform(animation[frame].pos));
                         break;
                     case Motion.Type.DRAGGED:
-                        parent.painter.writeLine(pen_transform(animation[frame - 1].pos), pen_transform(animation[frame].pos));
+                        parent.painter.writeLine(offset+pen_transform(animation[frame - 1].pos), offset+pen_transform(animation[frame].pos));
                         break;
                 }
 
@@ -133,23 +143,50 @@ public class AIBehavior : MonoBehaviour {
                 }
             }
 
-            parent.moveHand(pen_transform(animation[frame].pos));
+            parent.moveHand(offset+pen_transform(animation[frame].pos));
         }
     }
+
 	private static Vector2 pen_transform(Vector2 v)
 	{
-		return new Vector2(v.x / 640f, 1 - v.y / 640f);
+		return new Vector2((v.x-90) / 640f, 1 - (v.y-90) / 640f);
 	}
 
     interface AIState
     {
         void update();
     }
+
+	private void turn_the_page() {
+		available_space = new bool[RESOLUTION];
+	}
+
+	private Vector2 find_available_space() {
+		int RUN_LENGTH = 7;
+		int run = 0;
+//		Debug.Log(available_space[0]);
+		for(int i=0; i<available_space.Length; ++i) {
+			if(!available_space[i]) {
+				++run;
+				if(run == RUN_LENGTH) {
+					Debug.Log("Picked " + (i+1-RUN_LENGTH));
+					return new Vector2(0, (float)(RUN_LENGTH-i-1)/RESOLUTION);
+				}
+			} else {
+				run = 0;
+			}
+		}
+		turn_the_page();
+		Debug.Log("Turned, picked 0");
+		return Vector2.zero;
+	}
+
     public void startAnimation(Motion[] animation)
     {
+		Vector2 offset = find_available_space();
         state =
-			new MovingLinearly(pen_transform(animation[0].pos), 3f, this,
-			new Animating(animation, this) );
+			new MovingLinearly(offset+pen_transform(animation[0].pos), 3f, this,
+			new Animating(animation, offset, this) );
     }
 
     void Update()
