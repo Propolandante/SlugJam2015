@@ -61,6 +61,11 @@ public class AIBehavior : MonoBehaviour {
             while (time - start_time < animation[frame + 1].time)
             {
                 ++frame;
+                if (frame >= animation.Length)
+                {
+                    parent.state = Idling.instance;
+                    return;
+                }
 
                 switch (animation[frame].type)
                 {
