@@ -70,11 +70,6 @@ public class AIBehavior : MonoBehaviour {
                 }
 
                 ++frame;
-                if (frame >= animation.Length)
-                {
-                    parent.state = Idling.instance;
-                    return;
-                }
 
                 switch (animation[frame].type)
                 {
@@ -84,6 +79,12 @@ public class AIBehavior : MonoBehaviour {
                     case Motion.Type.DRAGGED:
                         parent.painter.writeLine(animation[frame - 1].pos, animation[frame].pos);
                         break;
+                }
+
+                if (frame == animation.Length - 1)
+                {
+                    parent.state = Idling.instance;
+                    break;
                 }
             }
 
