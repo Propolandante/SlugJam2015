@@ -14,8 +14,12 @@ public class HandwritingPainter : MonoBehaviour
 	public GameObject pencil;
 	public MouseListener pencilListener;
 
-	int spriteCounter = 0;
+	public int spriteCounter = 0;
 	int maxSpriteCount = 1000;
+
+	public float spriteWidth = 0.004f;
+
+	float lineDensity = 1.0f;
 
 	public bool saving;
 
@@ -24,37 +28,49 @@ public class HandwritingPainter : MonoBehaviour
 		pencilListener = pencil.GetComponent<MouseListener>();
 	}
 
-	void Update()
+	public void writeDot(Vector2 pos)
 	{
-		if (Input.GetMouseButton(0))
-		{
-			writeOnPaper(pencilListener.getScreenCoords());
-		}
+		drawSprite(pos);
 	}
 
-	void writeOnPaper(Vector2 uvPos)
+	public void writeLine(Vector2 prevPos, Vector2 curPos)
 	{
-		if (saving) {return;}
+		if (prevPos == curPos)
+		{
+			return;
+		}
+
+		float dist = Vector2.Distance(prevPos, curPos);
+		int numSprites = 1 + Mathf.CeilToInt(dist / spriteWidth);
+		Debug.Log("numSprites: " + numSprites);
+
+		for (int s = 0; s < numSprites; s++)
+		{
+			float posAcrossLine = (float)s / (numSprites - 1);
+			Debug.Log("s: " + s + ", posAcrossLine: " + posAcrossLine);
+			Vector2 linePos = Vector2.Lerp(prevPos, curPos, posAcrossLine);
+			drawSprite(linePos);
+		}
+
+
+
+	}
+
+	private void drawSprite(Vector2 pos)
+	{
 		GameObject spriteObj;
 		spriteObj = (GameObject)Instantiate(Resources.Load("Sprites/PencilSpriteObject"));
 		spriteObj.GetComponent<SpriteRenderer>().color = spriteColor;
 		spriteObj.transform.parent = spriteContainer.transform;
-		spriteObj.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
 		Vector2 spritePos = Vector2.zero;
-		spritePos.x = uvPos.x - canvasCamera.orthographicSize;
-		spritePos.y = uvPos.y - canvasCamera.orthographicSize;
+		spritePos.x = pos.x - canvasCamera.orthographicSize;
+		spritePos.y = pos.y - canvasCamera.orthographicSize;
 		spriteObj.transform.localPosition = spritePos;
 
 		spriteCounter++;
-
-		/*
-		if (spriteCounter >= maxSpriteCount)
-		{
-			saving = true;
-			Invoke("SaveTexture",0.1f);
-		}
-		*/
 	}
+
+
 
 	void SaveTexture()
 	{
