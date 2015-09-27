@@ -55,6 +55,11 @@ public class AIBehavior : MonoBehaviour {
             parent = p;
         }
 
+        private Vector2 pen_transform(Vector2 v)
+        {
+            return new Vector2(v.x / 640f, 1 - v.y / 640f);
+        }
+
         public void update()
         {
             float time = Time.time;
@@ -62,13 +67,14 @@ public class AIBehavior : MonoBehaviour {
             {
                 ++frame;
 
+                float scale = 1f / 640f;
                 switch (animation[frame].type)
                 {
                     case Motion.Type.DOT:
-                        parent.painter.writeDot(animation[frame].pos);
+                        parent.painter.writeDot(pen_transform(animation[frame].pos));
                         break;
                     case Motion.Type.DRAGGED:
-                        parent.painter.writeLine(animation[frame - 1].pos, animation[frame].pos);
+                        parent.painter.writeLine(pen_transform(animation[frame - 1].pos), pen_transform(animation[frame].pos));
                         break;
                 }
 
