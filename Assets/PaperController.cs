@@ -11,6 +11,7 @@ class PaperController : MonoBehaviour
 	public GameObject paperTarget;
 	public GameObject oldPaper;
 	public Material rtMat;
+	public Material staticMat;
 
 	public GameObject playerHand;
 	public GameObject aiHand;
@@ -89,11 +90,11 @@ class PaperController : MonoBehaviour
 		cycling = false;
 		GameObject.Find("TexturePainter").GetComponent<HandwritingPainter>().clearCanvas();
 		currentPaper.GetComponent<MeshRenderer>().material = rtMat;
+		oldPaper.GetComponent<MeshRenderer>().material = staticMat;
 	}
 
 	private void shiftYValues()
 	{
-		Debug.Log("Shitf!");
 		for (int p = 0; p < papers.Count; p++)
 		{
 			Vector3 pos = papers[p].transform.localPosition;

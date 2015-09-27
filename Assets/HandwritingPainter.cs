@@ -62,7 +62,7 @@ public class HandwritingPainter : MonoBehaviour
 
 	public void clearCanvas()
 	{
-		baseMaterial.SetTexture("_MainTex",null);
+		baseMaterial.SetTexture("_MainTex",exampleTex);
 	}
 
 	private void drawSprite(Vector2 pos)
