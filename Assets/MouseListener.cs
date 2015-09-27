@@ -30,7 +30,7 @@ public class MouseListener : MonoBehaviour {
         updatePosition();
         checkMargin();
         handleClick();
-        
+
         wasMouseDown = mouseDown;
     }
 
@@ -68,6 +68,11 @@ public class MouseListener : MonoBehaviour {
             {
                 painterScript.writeDot(getScreenCoords());
             }
+        }
+
+        if (!mouseDown && wasMouseDown)
+        {
+            painterScript.SaveTexture();
         }
     }
 

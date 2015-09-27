@@ -55,36 +55,33 @@ public class AIBehavior : MonoBehaviour {
             parent = p;
         }
 
+        private Vector2 pen_transform(Vector2 v)
+        {
+            return new Vector2(v.x / 640f, 1 - v.y / 640f);
+        }
+
         public void update()
         {
             float time = Time.time;
-            int i = 0;
-            while (time - start_time < 0.001*animation[frame + 1].time)
+            while (time - start_time >= 0.001*animation[frame + 1].time)
             {
-                Debug.Log(time.ToString() + " " + start_time.ToString() + " " + animation[frame + 1].time.ToString());
-                // For debugging only
-                {
-                    //break;
-                    ++i;
-                    if (i >= 10)
-                        break;
-                }
-
                 ++frame;
-                if (frame >= animation.Length)
-                {
-                    parent.state = Idling.instance;
-                    return;
-                }
 
+                float scale = 1f / 640f;
                 switch (animation[frame].type)
                 {
                     case Motion.Type.DOT:
-                        parent.painter.writeDot(animation[frame].pos);
+                        parent.painter.writeDot(pen_transform(animation[frame].pos));
                         break;
                     case Motion.Type.DRAGGED:
-                        parent.painter.writeLine(animation[frame - 1].pos, animation[frame].pos);
+                        parent.painter.writeLine(pen_transform(animation[frame - 1].pos), pen_transform(animation[frame].pos));
                         break;
+                }
+
+                if (frame == animation.Length - 1)
+                {
+                    parent.state = Idling.instance;
+                    break;
                 }
             }
 
