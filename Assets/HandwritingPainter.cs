@@ -8,9 +8,10 @@ public class HandwritingPainter : MonoBehaviour
 	public GameObject spriteContainer;
 	public Camera canvasCamera;
 	public RenderTexture canvasTexture;
-	public Material baseMaterial;
+	private Material baseMaterial;
 	public Color spriteColor;
 	public GameObject canvas;
+	public Material blankCanvasMaterial;
 
 	public Texture2D bakedTex;
 	public Texture exampleTex;
@@ -30,6 +31,7 @@ public class HandwritingPainter : MonoBehaviour
 	void Start()
 	{
 		pencilListener = pencil.GetComponent<MouseListener>();
+		baseMaterial = Instantiate(blankCanvasMaterial);
 	}
 
 	public void writeDot(Vector2 pos)
@@ -55,9 +57,11 @@ public class HandwritingPainter : MonoBehaviour
 			Vector2 linePos = Vector2.Lerp(prevPos, curPos, posAcrossLine);
 			drawSprite(linePos);
 		}
+	}
 
-
-
+	public void clearCanvas()
+	{
+		baseMaterial.SetTexture("_MainTex",null);
 	}
 
 	private void drawSprite(Vector2 pos)
@@ -76,7 +80,7 @@ public class HandwritingPainter : MonoBehaviour
 
 	public void SaveTexture()
 	{
-		Debug.Log("SaveTexture()");
+		//Debug.Log("SaveTexture()");
 		saving = true;
 		spriteCounter = 0;
 		System.DateTime date = System.DateTime.Now; // pretty sure this is unnecessary
@@ -85,7 +89,8 @@ public class HandwritingPainter : MonoBehaviour
 		bakedTex.ReadPixels(new Rect(0,0,canvasTexture.width, canvasTexture.height), 0, 0);
 		bakedTex.Apply();
 		RenderTexture.active = null;
-		canvas.GetComponent<MeshRenderer>().material.SetTexture("_MainTex",bakedTex);
+		baseMaterial.SetTexture("_MainTex",bakedTex);
+		canvas.GetComponent<MeshRenderer>().material = baseMaterial;
 		foreach (Transform child in spriteContainer.transform)
 		{
 			Destroy(child.gameObject);

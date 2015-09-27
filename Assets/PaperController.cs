@@ -10,6 +10,7 @@ class PaperController : MonoBehaviour
 	public GameObject currentPaper;
 	public GameObject paperTarget;
 	public GameObject oldPaper;
+	public Material rtMat;
 
 	bool cycling;
 	bool toTarget;
@@ -34,7 +35,7 @@ class PaperController : MonoBehaviour
 		papers.Add(papers.First());
 		papers.RemoveAt(0);
 
-		printYValues();
+		//printYValues();
 
 
 		currentPaper = papers.First();
@@ -57,7 +58,7 @@ class PaperController : MonoBehaviour
 			{
 				toTarget = false;
 				shiftYValues();
-				printYValues();
+				//printYValues();
 			}
 		}
 		else
@@ -69,10 +70,17 @@ class PaperController : MonoBehaviour
 
 			if (progress >= 1.0f)
 			{
-				cycling = false;
-				printYValues();
+				finishCycling();
+				//printYValues();
 			}
 		}
+	}
+
+	private void finishCycling()
+	{
+		cycling = false;
+		GameObject.Find("TexturePainter").GetComponent<HandwritingPainter>().clearCanvas();
+		currentPaper.GetComponent<MeshRenderer>().material = rtMat;
 	}
 
 	private void shiftYValues()
