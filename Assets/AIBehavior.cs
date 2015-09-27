@@ -166,12 +166,10 @@ public class AIBehavior : MonoBehaviour {
 	private Vector2 find_available_space() {
 		int RUN_LENGTH = 7;
 		int run = 0;
-//		Debug.Log(available_space[0]);
 		for(int i=0; i<available_space.Length; ++i) {
 			if(!available_space[i]) {
 				++run;
 				if(run == RUN_LENGTH) {
-					Debug.Log("Picked " + (i+1-RUN_LENGTH));
 					return new Vector2(0, (float)(RUN_LENGTH-i-1)/RESOLUTION);
 				}
 			} else {
@@ -179,7 +177,6 @@ public class AIBehavior : MonoBehaviour {
 			}
 		}
 		turn_the_page();
-		Debug.Log("Turned, picked 0");
 		return Vector2.zero;
 	}
 

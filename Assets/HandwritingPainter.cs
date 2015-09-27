@@ -67,7 +67,6 @@ public class HandwritingPainter : MonoBehaviour
 		if(pencilListener.over_margin(pos)) {
 			int i = (int) Mathf.Floor((1-pos.y)*AIBehavior.RESOLUTION);
 			ai_behavior.available_space[i] = true;
-			Debug.Log("Unavail " + i);
 		}
 
 		GameObject spriteObj;
