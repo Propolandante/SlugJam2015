@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class AIBehavior : MonoBehaviour {
 
     public HandwritingPainter painter;
+	public GameObject paper;
 
     void Start()
     {
@@ -31,7 +32,9 @@ public class AIBehavior : MonoBehaviour {
 
     void moveHand(Vector2 v)
     {
-
+        float x = (v.x-.5f) * paper.transform.localScale.x * -1f;
+        float y = (v.y-.5f) * paper.transform.localScale.z * -1f;
+        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 0, y);
     }
     AIState state;
 
@@ -60,10 +63,15 @@ public class AIBehavior : MonoBehaviour {
             return new Vector2(v.x / 640f, 1 - v.y / 640f);
         }
 
+        private Vector2 pen_transform_2(Vector2 v)
+        {
+            return 700f * pen_transform(v);
+        }
+
         public void update()
         {
             float time = Time.time;
-            while (time - start_time >= 0.001*animation[frame + 1].time)
+            while (time - start_time >= 1f/5f/1000f*animation[frame + 1].time)
             {
                 ++frame;
 
@@ -85,7 +93,7 @@ public class AIBehavior : MonoBehaviour {
                 }
             }
 
-            parent.moveHand(animation[frame].pos);
+            parent.moveHand(pen_transform(animation[frame].pos));
         }
     }
     interface AIState
