@@ -3,13 +3,20 @@ using System.Collections;
 
 public class AIBehavior : MonoBehaviour {
 
-    class Motion
+    public HandwritingPainter painter;
+
+    void Start()
+    {
+        startAnimation(Animations.anim_1);
+    }
+
+    public class Motion
     {
         public enum Type { MOVED, DRAGGED, DOT }
         public Vector2 pos;
         public float time;
         public Type type;
-        Motion(string s, float t, float x, float y)
+        public Motion(string s, float t, float x, float y)
         {
             pos = new Vector2(x, y);
             time = t;
@@ -58,10 +65,10 @@ public class AIBehavior : MonoBehaviour {
                 switch (animation[frame].type)
                 {
                     case Motion.Type.DOT:
-                        writeDot(animation[frame].pos);
+                        parent.painter.writeDot(animation[frame].pos);
                         break;
                     case Motion.Type.DRAGGED:
-                        writeLine(animation[frame - 1].pos, animation[frame].pos);
+                        parent.painter.writeLine(animation[frame - 1].pos, animation[frame].pos);
                         break;
                 }
             }
