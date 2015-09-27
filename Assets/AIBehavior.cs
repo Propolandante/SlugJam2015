@@ -8,6 +8,8 @@ public class AIBehavior : MonoBehaviour {
 
     void Start()
     {
+		curr_msg = 1;
+		acknowledged = false;
         startAnimation(Animations.anims[1]);
     }
 
@@ -39,12 +41,26 @@ public class AIBehavior : MonoBehaviour {
 		hand_position = v;
     }
     AIState state;
+	int curr_msg;  // Current index into the array: Animations.anims
+	public bool acknowledged;  // Has the player "acknowledged" the current message yet?
 
     class Idling : AIState
     {
-        public static Idling instance = new Idling();
-        public void update() { }
-        private Idling() { }
+		AIBehavior parent;
+        public void update() {
+			if(parent.acknowledged) {
+				if(parent.curr_msg < Animations.anims.Length) {
+					parent.acknowledged = false;
+					++parent.curr_msg;
+				}
+				// Second if-statement is not redundant because
+				// parent.curr_msg can change.
+				if(parent.curr_msg < Animations.anims.Length) {
+					parent.startAnimation(Animations.anims[parent.curr_msg]);
+				}
+			}
+		}
+        public Idling(AIBehavior p) {parent = p;}
     }
 	class MovingLinearly : AIState {
 		Vector2 dest;
@@ -76,6 +92,11 @@ public class AIBehavior : MonoBehaviour {
         float start_time;
         Motion[] animation;
         AIBehavior parent;
+
+		private void end() {
+			parent.state = new MovingLinearly(new Vector2(-3, 0), 3f, parent, new Idling(parent));
+		}
+
         public Animating(Motion[] a, AIBehavior p)
         {
             frame = 0;
@@ -102,9 +123,8 @@ public class AIBehavior : MonoBehaviour {
                         break;
                 }
 
-                if (frame == animation.Length - 1)
-                {
-                    parent.state = new MovingLinearly(new Vector2(-3, 0), 3f, parent, Idling.instance);
+                if (frame == animation.Length - 1) {
+					end();
                     break;
                 }
             }

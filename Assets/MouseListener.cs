@@ -7,6 +7,7 @@ public class MouseListener : MonoBehaviour {
     GameObject debug = null;
     public GameObject painter;
     HandwritingPainter painterScript;
+	public AIBehavior ai_behavior;
 
     public float mx;
     public float my;
@@ -23,7 +24,7 @@ public class MouseListener : MonoBehaviour {
         painterScript = painter.GetComponent<HandwritingPainter>();
 	}
 
-	void Update () 
+	void Update ()
     {
         mouseDown = Input.GetMouseButton(0);
 
@@ -57,6 +58,9 @@ public class MouseListener : MonoBehaviour {
     {
         if (mouseDown)
         {
+			if(mx < 0.3)
+				ai_behavior.acknowledged = true;
+
             if (wasMouseDown)
             {
                 if (getScreenCoords() != getPrevScreenCoords())
