@@ -12,6 +12,9 @@ class PaperController : MonoBehaviour
 	public GameObject oldPaper;
 	public Material rtMat;
 
+	public GameObject playerHand;
+	public GameObject aiHand;
+
 	bool cycling;
 	bool toTarget;
 
@@ -42,6 +45,9 @@ class PaperController : MonoBehaviour
 
 		currentPaper = papers.First();
 		oldPaper = papers.Last();
+
+		playerHand.GetComponent<MouseListener>().paper = currentPaper;
+		aiHand.GetComponent<AIBehavior>().paper = currentPaper;
 
 		cycling = true;
 		toTarget = true;

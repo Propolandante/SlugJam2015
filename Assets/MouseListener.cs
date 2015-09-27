@@ -21,7 +21,7 @@ public class MouseListener : MonoBehaviour {
 	void Start () {
         painterScript = painter.GetComponent<HandwritingPainter>();
 
-		Cursor.visible = false;
+		//Cursor.visible = false;
 	}
 
 	void Update ()
