@@ -87,7 +87,7 @@ public class AIBehavior : MonoBehaviour {
         public void update()
         {
             float time = Time.time;
-            while (time - start_time >= 1f/5f/1000f*animation[frame + 1].time)
+            while (time - start_time >= 1f/2.5f/1000f*animation[frame + 1].time)
             {
                 ++frame;
 
