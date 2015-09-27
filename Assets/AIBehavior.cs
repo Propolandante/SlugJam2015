@@ -59,7 +59,7 @@ public class AIBehavior : MonoBehaviour {
         {
             float time = Time.time;
             int i = 0;
-            while (time - start_time < 0.001*animation[frame + 1].time)
+            while (time - start_time >= 0.001*animation[frame + 1].time)
             {
                 // For debugging only
                 {
