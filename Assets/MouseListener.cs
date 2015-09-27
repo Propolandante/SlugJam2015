@@ -20,7 +20,7 @@ public class MouseListener : MonoBehaviour {
         my = (Input.mousePosition.y / Screen.height);
         float x = (mx-.5f) * paper.transform.localScale.x * -1f;
         float y = (my-.5f) * paper.transform.localScale.z * -1f;
-        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 1, y);
+        transform.position = paper.transform.position + paper.transform.rotation * new Vector3(x, 0, y);
 
         if (mx < 0.3)
             debug.transform.position = new Vector3(1.65f, 3, -8.35f);
