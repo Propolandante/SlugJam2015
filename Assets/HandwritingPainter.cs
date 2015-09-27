@@ -42,12 +42,12 @@ public class HandwritingPainter : MonoBehaviour
 
 		float dist = Vector2.Distance(prevPos, curPos);
 		int numSprites = 1 + Mathf.CeilToInt(dist / spriteWidth);
-		Debug.Log("numSprites: " + numSprites);
+		//Debug.Log("numSprites: " + numSprites);
 
 		for (int s = 0; s < numSprites; s++)
 		{
-			float posAcrossLine = (float)s / (numSprites - 1);
-			Debug.Log("s: " + s + ", posAcrossLine: " + posAcrossLine);
+			float posAcrossLine = (float) s / (numSprites - 1);
+			//Debug.Log("s: " + s + ", posAcrossLine: " + posAcrossLine);
 			Vector2 linePos = Vector2.Lerp(prevPos, curPos, posAcrossLine);
 			drawSprite(linePos);
 		}
@@ -70,15 +70,15 @@ public class HandwritingPainter : MonoBehaviour
 		spriteCounter++;
 	}
 
-
-
-	void SaveTexture()
+	public void SaveTexture()
 	{
+		Debug.Log("SaveTexture()");
+		saving = true;
 		spriteCounter = 0;
 		RenderTexture.active = canvasTexture;
 		Texture2D tex = new Texture2D(canvasTexture.width, canvasTexture.height, TextureFormat.RGB24, false);
-		tex.ReadPixels(new Rect(0,0,canvasTexture.width, canvasTexture.height), 0, 0);
-		tex.Apply();
+		tex.ReadPixels(new Rect(0,0,tex.width, tex.height), 0, 0);
+		//tex.Apply();
 		RenderTexture.active = null;
 		baseMaterial.mainTexture = tex;
 		foreach (Transform child in spriteContainer.transform)
