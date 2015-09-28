@@ -31,7 +31,7 @@ public class MouseListener : MonoBehaviour {
         mouseDown = Input.GetMouseButton(0);
         if (Input.GetMouseButtonDown(1))
         {
-            GameObject.Find("Paper Stack").GetComponent<PaperController>().nextPage();
+			ai_behavior.turn_the_page();
         }
 
         updatePosition();

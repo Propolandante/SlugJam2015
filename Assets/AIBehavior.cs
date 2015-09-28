@@ -25,9 +25,9 @@ public class AIBehavior : MonoBehaviour {
         public Vector2 pos;
         public float time;
         public Type type;
-        public Motion(string s, float t, float x, float y)
+        public Motion(string s, float t, double x, float y)
         {
-            pos = new Vector2(x, y);
+            pos = new Vector2((float) x, y);
             time = t;
             if (s == "moved")
                 type = Type.MOVED;
@@ -124,7 +124,7 @@ public class AIBehavior : MonoBehaviour {
 			}
 
             float time = Time.time;
-            while (time - start_time >= 1f/1f/1000f*animation[frame + 1].time)
+            while (time - start_time >= 1f/2f/1000f*animation[frame + 1].time)
             {
                 ++frame;
 
@@ -159,12 +159,13 @@ public class AIBehavior : MonoBehaviour {
         void update();
     }
 
-	private void turn_the_page() {
+	public void turn_the_page() {
 		available_space = new bool[RESOLUTION];
+        GameObject.Find("Paper Stack").GetComponent<PaperController>().nextPage();
 	}
 
 	private Vector2 find_available_space() {
-		int RUN_LENGTH = 7;
+		int RUN_LENGTH = 14;
 		int run = 0;
 		for(int i=0; i<available_space.Length; ++i) {
 			if(!available_space[i]) {
