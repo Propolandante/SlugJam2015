@@ -165,7 +165,7 @@ public class AIBehavior : MonoBehaviour {
 	}
 
 	private Vector2 find_available_space() {
-		int RUN_LENGTH = 14;
+		int RUN_LENGTH = 20;
 		int run = 0;
 		for(int i=0; i<available_space.Length; ++i) {
 			if(!available_space[i]) {
