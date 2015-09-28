@@ -19,7 +19,7 @@ class PaperController : MonoBehaviour
 	bool cycling;
 	bool toTarget;
 
-	private float cycleDuration = 1.0f;
+	private float cycleDuration = .75f;
 	private float timeStartedCycling;
 
 	void Update()
